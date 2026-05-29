@@ -1,5 +1,7 @@
 # SmartHealth Monitor
 
+![Android CI](https://github.com/roygro/SmartHealthMonitor2/actions/workflows/build.yml/badge.svg)
+
 Aplicación Android multiplataforma para monitoreo de salud personal.
 
 Desarrollada como proyecto integrador en UTNG — 9° Cuatrimestre 2025.
