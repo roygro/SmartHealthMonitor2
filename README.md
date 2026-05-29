@@ -22,3 +22,11 @@ Desarrollada como proyecto integrador en UTNG — 9° Cuatrimestre 2025.
 ## Autor
 
 Princes Rocio Guerrero Sánchez — UTNG — princesgro@utng.edu.mx
+
+## Capturas de pantalla
+
+### Pantalla de Login
+![Login](screenshots/login.png)
+
+### Pantalla de Dashboard
+![Dashboard](screenshots/dashboard.png)
