@@ -20,8 +20,6 @@ import mx.edu.utng.prgs.smarthealthmonitor2.ui.components.FilaHistorial
 import mx.edu.utng.prgs.smarthealthmonitor2.ui.components.TarjetaDato
 import mx.edu.utng.prgs.smarthealthmonitor2.ui.viewmodel.DashboardViewModel
 
-// ELIMINA el import de BuildConfig
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen(
@@ -31,6 +29,7 @@ fun DashboardScreen(
 ) {
     val fc by viewModel.fc.collectAsState()
     val pasos by viewModel.pasos.collectAsState()
+    val spO2 by viewModel.spO2.collectAsState()
     val historial = viewModel.historial
 
     Scaffold(
@@ -87,6 +86,16 @@ fun DashboardScreen(
                 )
             }
 
+            // ⭐ NUEVA TARJETA SpO2
+            item {
+                TarjetaDato(
+                    valor = "$spO2",
+                    unidad = "%",
+                    label = "Saturación de oxígeno",
+                    colorValor = MaterialTheme.colorScheme.tertiary
+                )
+            }
+
             item {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -107,14 +116,15 @@ fun DashboardScreen(
                 FilaHistorial(lectura = lectura)
             }
 
-            // ⭐ BOTÓN DE SIMULACIÓN (siempre visible)
             item {
                 OutlinedButton(
                     onClick = {
                         val fcSimulado = (60..110).random()
                         val pasosSimulado = (3000..8000).random()
+                        val spO2Simulado = (92..100).random()
                         SmartHealthRepository.actualizarFC(fcSimulado)
                         SmartHealthRepository.actualizarPasos(pasosSimulado)
+                        SmartHealthRepository.actualizarSpO2(spO2Simulado)
                     },
                     modifier = Modifier.fillMaxWidth()
                 ) {

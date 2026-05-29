@@ -1,9 +1,9 @@
 package mx.edu.utng.prgs.smarthealthmonitor2.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope  // ← IMPORTANTE: agregar este import
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.*
-import mx.edu.utng.prgs.smarthealthmonitor2.data.models.MockData  // ← Cambiar de data a data.models
+import mx.edu.utng.prgs.smarthealthmonitor2.data.models.MockData
 import mx.edu.utng.prgs.smarthealthmonitor2.data.SmartHealthRepository
 
 class DashboardViewModel : ViewModel() {
@@ -22,6 +22,15 @@ class DashboardViewModel : ViewModel() {
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = MockData.pasosActual
+        )
+
+    // ⭐ NUEVO: SpO2
+    val spO2: StateFlow<Int> = SmartHealthRepository.spO2Flow
+        .map { if (it == 0) 98 else it }  // Valor normal por defecto: 98%
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = 98
         )
 
     val historial = MockData.historialFC
