@@ -25,8 +25,11 @@ Princes Rocio Guerrero Sánchez — UTNG — princesgro@utng.edu.mx
 
 ## Capturas de pantalla
 
-### Pantalla de Login
-![Login](screenshots/login.png)
-
-### Pantalla de Dashboard
-![Dashboard](screenshots/dashboard.png)
+<div align="center">
+  <table>
+    <tr>
+      <td align="center"><b>Pantalla de Login</b><br/><img src="screenshots/login.png" width="250"/></td>
+      <td align="center"><b>Pantalla de Dashboard</b><br/><img src="screenshots/dashboard.png" width="250"/></td>
+    </tr>
+  </table>
+</div>
