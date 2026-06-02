@@ -12,22 +12,29 @@ class HealthDataService : Service() {
 
     companion object {
         private const val TAG = "HealthDataService"
+        const val PATH_FC = "/smarthealthmonitor/fc"
+        const val PATH_PASOS = "/smarthealthmonitor/pasos"
     }
 
     override fun onCreate() {
         super.onCreate()
         Log.d(TAG, "HealthDataService onCreate - Servicio de salud iniciado")
-
-        // Iniciar monitoreo simulado
-        startMonitoring()
+        startSimulatedMonitoring()
     }
 
-    private fun startMonitoring() {
+    private fun startSimulatedMonitoring() {
         scope.launch {
             while (true) {
                 delay(5000) // Cada 5 segundos
-                val bpmSimulado = (60..100).random()
+
+                // Simular FC (60-100 bpm normal)
+                val bpmSimulado = (60..110).random()
                 Log.d(TAG, "FC simulada: $bpmSimulado bpm")
+
+                // Simular pasos (incrementos de 100-500 pasos)
+                val pasosSimulados = (100..500).random()
+                Log.d(TAG, "Pasos simulados: +$pasosSimulados pasos")
+
                 // TODO: Enviar al teléfono cuando implementemos MessageClient
             }
         }
