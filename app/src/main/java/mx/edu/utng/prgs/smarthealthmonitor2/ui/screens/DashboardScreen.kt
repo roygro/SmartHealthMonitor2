@@ -30,7 +30,7 @@ fun DashboardScreen(
     val fc by viewModel.fc.collectAsState()
     val pasos by viewModel.pasos.collectAsState()
     val spO2 by viewModel.spO2.collectAsState()
-    val historial = viewModel.historial
+    val historial by viewModel.historial.collectAsState()
 
     Scaffold(
         topBar = {
