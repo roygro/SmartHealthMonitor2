@@ -46,7 +46,28 @@ fun HistorialScreen(
                     navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
                 )
             )
-        }
+        },
+        // ⭐ Reto: FAB para limpiar historial antiguo con Snackbar
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    scope.launch {
+                        // Limpiar lecturas de más de 24 horas
+                        val limite24h = System.currentTimeMillis() - (24 * 60 * 60 * 1000)
+                        SmartHealthRepository.limpiarHistorialAntiguo(limite24h)
+                        snackbarHostState.showSnackbar("Historial limpiado")
+                    }
+                },
+                containerColor = MaterialTheme.colorScheme.errorContainer
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "Limpiar historial",
+                    tint = MaterialTheme.colorScheme.onErrorContainer
+                )
+            }
+        },
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ) { paddingValues ->
         if (lecturas.isEmpty()) {
             // Estado vacío — antes del primer dato del wearable
