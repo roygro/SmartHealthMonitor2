@@ -1,6 +1,5 @@
 package mx.edu.utng.prgs.smarthealthmonitor2.wear.presentation
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -15,10 +14,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.lifecycleScope
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
 import androidx.wear.compose.material.TimeText
 import androidx.wear.tooling.preview.devices.WearDevices
+import kotlinx.coroutines.launch
 import mx.edu.utng.prgs.smarthealthmonitor2.wear.R
 import mx.edu.utng.prgs.smarthealthmonitor2.wear.presentation.theme.SmartHealthMonitor2Theme
 import mx.edu.utng.prgs.smarthealthmonitor2.wear.presentation.wear.HealthDataService
@@ -29,9 +30,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setTheme(android.R.style.Theme_DeviceDefault)
 
-        // Iniciar el servicio HealthDataService
-        val intent = Intent(this, HealthDataService::class.java)
-        startService(intent)
+        // Registrar el PassiveListenerService con Health Services API
+        lifecycleScope.launch {
+            HealthDataService.registrar(applicationContext)
+        }
 
         setContent {
             WearApp()

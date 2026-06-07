@@ -9,7 +9,7 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "mx.edu.utng.prgs.smarthealthmonitor2.wear"
+        applicationId = "mx.edu.utng.prgs.smarthealthmonitor2"
         minSdk = 30  // ← CAMBIADO de 28 a 30
         targetSdk = 36
         versionCode = 1
@@ -55,7 +55,10 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     // Health Services API
-    implementation("androidx.health:health-services-client:1.1.0-alpha03")
-    implementation("com.google.guava:guava:33.0.0-android")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.7.3")
+    implementation(libs.androidx.health.services.client)
+    implementation(libs.guava)
+    implementation(libs.kotlinx.coroutines.guava)
+
+    // Coroutines para await() de MessageClient / NodeClient
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
 }

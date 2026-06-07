@@ -1,55 +1,80 @@
 package mx.edu.utng.prgs.smarthealthmonitor2.wear.presentation.wear
 
-import android.app.Service
-import android.content.Intent
-import android.os.IBinder
+import android.content.Context
 import android.util.Log
-import kotlinx.coroutines.*
+import androidx.health.services.client.HealthServices
+import androidx.health.services.client.PassiveListenerService
+import androidx.health.services.client.data.DataPointContainer
+import androidx.health.services.client.data.DataType
+import androidx.health.services.client.data.PassiveListenerConfig
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.guava.await          // ← ListenableFuture (Health Services)
+import kotlinx.coroutines.launch
 
-class HealthDataService : Service() {
+class HealthDataService : PassiveListenerService() {
 
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    private lateinit var wearDataSender: WearDataSender
 
     companion object {
         private const val TAG = "HealthDataService"
-        const val PATH_FC = "/smarthealthmonitor/fc"
-        const val PATH_PASOS = "/smarthealthmonitor/pasos"
-    }
 
-    override fun onCreate() {
-        super.onCreate()
-        Log.d(TAG, "HealthDataService onCreate - Servicio de salud iniciado")
-        startSimulatedMonitoring()
-    }
+        /** Registra el PassiveListenerService con Health Services API. */
+        suspend fun registrar(context: Context) {
+            try {
+                val hsClient     = HealthServices.getClient(context)
+                val passiveClient = hsClient.passiveMonitoringClient
 
-    private fun startSimulatedMonitoring() {
-        scope.launch {
-            while (true) {
-                delay(5000) // Cada 5 segundos
+                val config = PassiveListenerConfig.builder()
+                    .setDataTypes(
+                        setOf(
+                            DataType.HEART_RATE_BPM,
+                            DataType.STEPS_DAILY          // ⭐ Reto: pasos diarios
+                        )
+                    )
+                    .setShouldUserActivityInfoBeRequested(true)
+                    .build()
 
-                // Simular FC (60-100 bpm normal)
-                val bpmSimulado = (60..110).random()
-                Log.d(TAG, "FC simulada: $bpmSimulado bpm")
+                passiveClient.setPassiveListenerServiceAsync(
+                    HealthDataService::class.java,
+                    config
+                ).await()
 
-                // Simular pasos (incrementos de 100-500 pasos)
-                val pasosSimulados = (100..500).random()
-                Log.d(TAG, "Pasos simulados: +$pasosSimulados pasos")
-
-                // TODO: Enviar al teléfono cuando implementemos MessageClient
+                Log.d(TAG, "PassiveListenerService registrado correctamente")
+            } catch (e: Exception) {
+                Log.e(TAG, "Error al registrar PassiveListenerService: ${e.message}")
             }
         }
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Log.d(TAG, "HealthDataService onStartCommand")
-        return START_STICKY
+    override fun onCreate() {
+        super.onCreate()
+        wearDataSender = WearDataSender(this)
+        Log.d(TAG, "HealthDataService creado")
     }
 
-    override fun onBind(intent: Intent?): IBinder? = null
+    override fun onNewDataPointsReceived(dataPoints: DataPointContainer) {
+        // ── Frecuencia cardíaca ─────────────────────────────────────────────
+        dataPoints.getData(DataType.HEART_RATE_BPM).forEach { dataPoint ->
+            val bpm = (dataPoint.value as Double).toInt()
+            Log.d(TAG, "FC recibida del sensor: $bpm bpm")
+            scope.launch { wearDataSender.enviarFC(bpm) }
+        }
+
+        // ── Pasos diarios ⭐ Reto ───────────────────────────────────────────
+        dataPoints.getData(DataType.STEPS_DAILY).forEach { dataPoint ->
+            val pasos = dataPoint.value as Long
+            Log.d(TAG, "Pasos diarios recibidos: $pasos")
+            scope.launch { wearDataSender.enviarPasos(pasos) }
+        }
+    }
 
     override fun onDestroy() {
         super.onDestroy()
         scope.cancel()
-        Log.d(TAG, "HealthDataService onDestroy")
+        Log.d(TAG, "HealthDataService destruido")
     }
 }
