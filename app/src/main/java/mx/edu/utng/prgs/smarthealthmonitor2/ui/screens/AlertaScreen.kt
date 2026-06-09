@@ -1,6 +1,5 @@
 package mx.edu.utng.prgs.smarthealthmonitor2.ui.screens
 
-
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -80,12 +79,34 @@ fun AlertaScreen(
     )
 }
 
-// Previews
+// Previews CORREGIDOS - Ahora deberían funcionar
 @Preview(showBackground = true, name = "Alerta - Light")
-@Preview(showBackground = true, name = "Alerta - Dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun AlertaScreenPreviewSimple() {
+    SmartHealthMonitor2Theme {
+        AlertaScreen(fc = 145, onDismiss = {}, onConfirmar = {})
+    }
+}
+@Preview(
+    showBackground = true,
+    name = "Alerta - Dark",
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    widthDp = 360,
+    heightDp = 640
+)
 @Composable
 private fun AlertaScreenPreview() {
     SmartHealthMonitor2Theme {
-        AlertaScreen(fc = 145, onDismiss = {}, onConfirmar = {})
+        // Surface da contexto y fondo al diálogo
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            AlertaScreen(
+                fc = 145,
+                onDismiss = {},
+                onConfirmar = {}
+            )
+        }
     }
 }
