@@ -33,19 +33,22 @@ Desarrollada como proyecto integrador en UTNG — 9° Cuatrimestre 2025.
 ## Capturas de pantalla
 
 <div align="center">
-
-| Login | Dashboard |
-|-------|-----------|
-| ![Login](screenshots/login.png) | ![Dashboard](screenshots/dashboard.png) |
-
-| Historial | Alerta (diálogo) |
-|-----------|------------------|
-| ![Historial](screenshots/historial.png) | ![Alerta](screenshots/alerta.png) |
+  <table>
+    <tr>
+      <td align="center"><b>Login</b><br/><img src="screenshots/login.png" width="200"/></td>
+      <td align="center"><b>Dashboard</b><br/><img src="screenshots/dashboard.png" width="200"/></td>
+    </tr>
+    <tr>
+      <td align="center"><b>Historial</b><br/><img src="screenshots/historial.png" width="200"/></td>
+      <td align="center"><b>Alerta (diálogo)</b><br/><img src="screenshots/alerta.png" width="200"/></td>
+    </tr>
+  </table>
+</div>
 
 ### Snackbar de confirmación
 
-![Snackbar](screenshots/snackbar.png)
-
+<div align="center">
+  <img src="screenshots/snackbar.png" width="200"/>
 </div>
 
 ## Flujo completo de la app (v1.0.0)
