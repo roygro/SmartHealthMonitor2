@@ -6,16 +6,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.launch
 import mx.edu.utng.prgs.smarthealthmonitor2.data.SmartHealthRepository
-import mx.edu.utng.prgs.smarthealthmonitor2.data.models.MockData
 import mx.edu.utng.prgs.smarthealthmonitor2.ui.components.FilaHistorial
 import mx.edu.utng.prgs.smarthealthmonitor2.ui.components.TarjetaDato
 import mx.edu.utng.prgs.smarthealthmonitor2.ui.viewmodel.DashboardViewModel
@@ -24,13 +22,34 @@ import mx.edu.utng.prgs.smarthealthmonitor2.ui.viewmodel.DashboardViewModel
 @Composable
 fun DashboardScreen(
     onHistorialClick: () -> Unit = {},
-    onAlertClick: () -> Unit = {},
     viewModel: DashboardViewModel = viewModel()
 ) {
     val fc by viewModel.fc.collectAsState()
     val pasos by viewModel.pasos.collectAsState()
     val spO2 by viewModel.spO2.collectAsState()
     val historial by viewModel.historial.collectAsState()
+
+    // ── Estado del diálogo y Snackbar ──────────────────────
+    var mostrarAlerta by remember { mutableStateOf(false) }
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+
+    // ── Diálogo condicional ────────────────────────────────
+    if (mostrarAlerta) {
+        AlertaScreen(
+            fc = fc,
+            onDismiss = { mostrarAlerta = false },
+            onConfirmar = {
+                mostrarAlerta = false
+                scope.launch {
+                    snackbarHostState.showSnackbar(
+                        message = "✅ Alerta enviada a tus contactos de emergencia",
+                        duration = SnackbarDuration.Long
+                    )
+                }
+            }
+        )
+    }
 
     Scaffold(
         topBar = {
@@ -47,9 +66,10 @@ fun DashboardScreen(
                 )
             )
         },
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = onAlertClick,
+                onClick = { mostrarAlerta = true },
                 containerColor = MaterialTheme.colorScheme.error
             ) {
                 Icon(
@@ -72,7 +92,7 @@ fun DashboardScreen(
                     valor = "$fc",
                     unidad = "bpm",
                     label = "Frecuencia cardíaca",
-                    colorValor = MaterialTheme.colorScheme.error,
+                    colorValor = if (fc > 100 || fc < 60) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
                     valorNumerico = fc
                 )
             }
