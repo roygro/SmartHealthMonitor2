@@ -2,21 +2,18 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    id("com.google.devtools.ksp") version "2.0.21-1.0.28"
 }
 
 android {
-    namespace = "mx.edu.utng.prgs.smarthealthmonitor2"
+    namespace = "mx.edu.utng.prgs.smarthealthmonitor2.wear"
     compileSdk = 36
 
     defaultConfig {
         applicationId = "mx.edu.utng.prgs.smarthealthmonitor2"
-        minSdk = 26
+        minSdk = 30  // ← CAMBIADO de 28 a 30
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -37,37 +34,31 @@ android {
     }
     buildFeatures {
         compose = true
-        buildConfig = true
     }
 }
 
 dependencies {
 
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.activity.compose)
+    implementation(libs.play.services.wearable)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    implementation(libs.androidx.compose.material)
+    implementation(libs.androidx.compose.foundation)
+    implementation(libs.androidx.wear.tooling.preview)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.core.splashscreen)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    // Navigation Compose
-    implementation(libs.androidx.navigation.compose)
-    // Wearable Data Layer API
-    implementation("com.google.android.gms:play-services-wearable:18.2.0")
-    // Coroutines para await()
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
 
-    // ⭐ ROOM DB
-    val roomVersion = "2.6.1"
-    implementation("androidx.room:room-runtime:$roomVersion")
-    implementation("androidx.room:room-ktx:$roomVersion")
-    ksp("androidx.room:room-compiler:$roomVersion")
+    // Health Services API
+    implementation(libs.androidx.health.services.client)
+    implementation(libs.guava)
+    implementation(libs.kotlinx.coroutines.guava)
+
+    // Coroutines para await() de MessageClient / NodeClient
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
 }

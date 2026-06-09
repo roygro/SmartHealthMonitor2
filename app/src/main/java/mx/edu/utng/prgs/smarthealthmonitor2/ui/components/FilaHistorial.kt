@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import mx.edu.utng.prgs.smarthealthmonitor2.data.models.LecturaFC
+import mx.edu.utng.prgs.smarthealthmonitor2.data.db.LecturaFC
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,10 +50,10 @@ private fun FilaHistorialPreview() {
     MaterialTheme {
         Column {
             FilaHistorial(
-                lectura = LecturaFC(1, 78, "11:00", true)
+                lectura = LecturaFC(id = 1, valorBpm = 78, hora = "11:00")
             )
             FilaHistorial(
-                lectura = LecturaFC(4, 95, "09:30", false)
+                lectura = LecturaFC(id = 4, valorBpm = 95, hora = "09:30")
             )
         }
     }

@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.*
 import mx.edu.utng.prgs.smarthealthmonitor2.data.models.MockData
 import mx.edu.utng.prgs.smarthealthmonitor2.data.SmartHealthRepository
+import mx.edu.utng.prgs.smarthealthmonitor2.data.db.LecturaFC
 
 class DashboardViewModel : ViewModel() {
 
@@ -24,14 +25,20 @@ class DashboardViewModel : ViewModel() {
             initialValue = MockData.pasosActual
         )
 
-    // ⭐ NUEVO: SpO2
     val spO2: StateFlow<Int> = SmartHealthRepository.spO2Flow
-        .map { if (it == 0) 98 else it }  // Valor normal por defecto: 98%
+        .map { if (it == 0) 98 else it }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = 98
         )
 
-    val historial = MockData.historialFC
+    // ⭐ Ejercicio 03 — Historial reactivo desde Room
+    val historial: StateFlow<List<LecturaFC>> =
+        SmartHealthRepository.obtenerHistorial()
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = emptyList()
+            )
 }
