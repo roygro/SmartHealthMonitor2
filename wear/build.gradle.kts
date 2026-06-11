@@ -9,8 +9,9 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "mx.edu.utng.prgs.smarthealthmonitor2"
-        minSdk = 30  // ← CAMBIADO de 28 a 30
+        // ✅ ApplicationId ÚNICO para el wear (no conflicta con app)
+        applicationId = "mx.edu.utng.prgs.smarthealthmonitor2.wear"
+        minSdk = 30
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
@@ -38,6 +39,8 @@ android {
 }
 
 dependencies {
+    // ❌ ELIMINADA la dependencia de :app para romper el ciclo
+    // implementation(project(":app"))
 
     implementation(libs.play.services.wearable)
     implementation(platform(libs.androidx.compose.bom))
@@ -49,16 +52,18 @@ dependencies {
     implementation(libs.androidx.wear.tooling.preview)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.core.splashscreen)
+
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    // Health Services API
     implementation(libs.androidx.health.services.client)
     implementation(libs.guava)
     implementation(libs.kotlinx.coroutines.guava)
-
-    // Coroutines para await() de MessageClient / NodeClient
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
+
+    implementation("com.google.android.horologist:horologist-compose-layout:0.6.17")
+    implementation("com.google.android.horologist:horologist-compose-material:0.6.17")
+    implementation("androidx.wear.compose:compose-navigation:1.3.1")
 }
