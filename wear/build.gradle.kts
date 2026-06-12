@@ -67,4 +67,6 @@ dependencies {
     implementation("com.google.android.horologist:horologist-compose-layout:0.6.17")
     implementation("com.google.android.horologist:horologist-compose-material:0.6.17")
     implementation("androidx.wear.compose:compose-navigation:1.3.1")
+
+    implementation("androidx.compose.material:material-icons-extended:1.6.0")
 }
