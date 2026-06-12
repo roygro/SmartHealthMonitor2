@@ -10,8 +10,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             SmartHealthWearTheme {
-                // TODO Ej.02: reemplazar con WearNavGraph
-                // Pantalla en blanco/gris como pide la guía
+                // ✅ Ej.02: Mostrar el Dashboard con FC
+                WearDashboardScreen()
             }
         }
     }
