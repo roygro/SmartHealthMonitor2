@@ -69,4 +69,12 @@ dependencies {
     implementation("androidx.wear.compose:compose-navigation:1.3.1")
 
     implementation("androidx.compose.material:material-icons-extended:1.6.0")
+
+
+    // WatchFace API completa
+    implementation("androidx.wear.watchface:watchface:1.2.1")
+    implementation("androidx.wear.watchface:watchface-complications-data:1.2.1")
+    implementation("androidx.wear.watchface:watchface-complications-rendering:1.2.1")  // ← AGREGAR ESTA
+    implementation("androidx.wear.watchface:watchface-style:1.2.1")
+    implementation("androidx.wear.watchface:watchface-client:1.2.1")  // ← AGREGAR ESTA
 }

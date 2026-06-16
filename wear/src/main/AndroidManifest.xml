@@ -34,13 +34,25 @@
             </intent-filter>
         </activity>
 
-        <!-- ⭐ AGREGAR ESTO ⭐ -->
+        <!-- Servicio de Health Services (ya lo tenías) -->
         <service
             android:name=".presentation.wear.HealthDataService"
             android:exported="true"
             android:permission="com.google.android.wearable.permission.BIND_LISTENER">
             <intent-filter>
                 <action android:name="androidx.health.services.client.PASSIVE_LISTENER" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".watchface.SmartHealthWatchFaceService"
+            android:exported="true"
+            android:label="SmartHealth Watch Face"
+            android:permission="android.permission.BIND_WALLPAPER">
+
+            <intent-filter>
+                <action android:name="android.service.wallpaper.WallpaperService" />
+                <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
             </intent-filter>
         </service>
 

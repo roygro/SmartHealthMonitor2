@@ -9,6 +9,7 @@ import androidx.wear.compose.navigation.rememberSwipeDismissableNavController
 object WearScreens {
     const val DASHBOARD = "wear_dashboard"
     const val ALERTA = "wear_alerta"
+    const val HISTORIAL = "wear_historial"
 }
 
 @Composable
@@ -19,13 +20,18 @@ fun SmartHealthWearNavGraph() {
         navController = navController,
         startDestination = WearScreens.DASHBOARD
     ) {
+        // ✅ UN SOLO DASHBOARD (con ambos onClicks)
         composable(WearScreens.DASHBOARD) {
             WearDashboardScreen(
                 onAlertClick = {
                     navController.navigate(WearScreens.ALERTA)
+                },
+                onHistorialClick = {
+                    navController.navigate(WearScreens.HISTORIAL)
                 }
             )
         }
+
         composable(WearScreens.ALERTA) {
             val vm: WearDashboardViewModel = viewModel()
             val fc by vm.fc.collectAsState()
@@ -33,6 +39,13 @@ fun SmartHealthWearNavGraph() {
                 fc = fc,
                 onConfirmar = { navController.popBackStack() },
                 onCancelar = { navController.popBackStack() }
+            )
+        }
+
+        // ✅ AGREGAR EL DESTINO HISTORIAL
+        composable(WearScreens.HISTORIAL) {
+            WearHistorialScreen(
+                onBack = { navController.popBackStack() }
             )
         }
     }
