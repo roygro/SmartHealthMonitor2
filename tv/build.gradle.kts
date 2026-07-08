@@ -33,10 +33,7 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
-
-    buildFeatures {
-        compose = true
-    }
+    
 }
 
 dependencies {
@@ -66,6 +63,10 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
 
-    // Fragment (necesario para FragmentActivity)
+    // Fragment (necesario para FragmentActivity y viewModels)
     implementation("androidx.fragment:fragment-ktx:1.8.5")
+
+    // Activity (necesario para viewModels en Activity)
+    implementation("androidx.activity:activity-ktx:1.9.3")
+
 }
