@@ -1,32 +1,64 @@
 package mx.edu.utng.tv
 
 import android.os.Bundle
-import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.ViewModelProvider
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.Modifier
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import androidx.tv.material3.ExperimentalTvMaterial3Api
+import androidx.tv.material3.Surface
+import mx.edu.utng.tv.presentation.TvCatalogScreen
+import mx.edu.utng.tv.presentation.TvDetailScreen
+import mx.edu.utng.tv.presentation.TvPlaybackScreen
+import mx.edu.utng.tv.ui.theme.SmartHealthMonitor2Theme
 
-class MainActivity : FragmentActivity() {
-
-    private lateinit var viewModel: TvViewModel
-
+class MainActivity : ComponentActivity() {
+    @OptIn(ExperimentalTvMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContent {
+            SmartHealthMonitor2Theme {
+                Surface(modifier = Modifier.fillMaxSize()) {
+                    val navController = rememberNavController()
 
-        // Inicializar ViewModel manualmente
-        viewModel = ViewModelProvider(this).get(TvViewModel::class.java)
+                    NavHost(
+                        navController = navController,
+                        startDestination = "catalog"
+                    ) {
+                        composable("catalog") {
+                            TvCatalogScreen(
+                                onCardClick = { lecturaId ->
+                                    navController.navigate("detail/$lecturaId")
+                                }
+                            )
+                        }
 
-        if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.main_browse_fragment, MainFragment())
-                .commit()
+                        composable(
+                            route = "detail/{lecturaId}",
+                            arguments = listOf(
+                                navArgument("lecturaId") { type = NavType.IntType }
+                            )
+                        ) { backStackEntry ->
+                            val id = backStackEntry.arguments?.getInt("lecturaId") ?: 0
+                            TvDetailScreen(
+                                lecturaId = id,
+                                navController = navController
+                            )
+                        }
+
+                        composable("playback") {
+                            TvPlaybackScreen(
+                                navController = navController
+                            )
+                        }
+                    }
+                }
+            }
         }
-
-        // Iniciar simulación de datos
-        DataSimulator.startSimulation(viewModel)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        DataSimulator.stopSimulation()
     }
 }
