@@ -2,40 +2,50 @@ package mx.edu.utng.tv
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
+import mx.edu.utng.tv.domain.model.TvUiState
 
 class TvViewModel : ViewModel() {
 
-    // FC actual (simulado)
-    private val _fc = MutableStateFlow(0)
-    val fc: StateFlow<Int> = _fc.asStateFlow()
-
-    // Historial de lecturas
-    private val _historial = MutableStateFlow<List<LecturaFC>>(emptyList())
-    val historial: StateFlow<List<LecturaFC>> = _historial.asStateFlow()
+    private val _state = MutableStateFlow(TvUiState())
+    val state: StateFlow<TvUiState> = _state.asStateFlow()
 
     init {
-        cargarHistorial()
+        cargarDatos()
     }
 
-    fun cargarHistorial() {
-        _historial.value = MockData.historialFC
+    fun cargarDatos() {
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true) }
+
+            // Usar MockData para simular
+            val lecturas = MockData.historialFC
+            val fcActual = lecturas.lastOrNull()?.valorBpm ?: 0
+
+            _state.update {
+                it.copy(
+                    lecturas = lecturas,
+                    fcActual = fcActual,
+                    isLoading = false
+                )
+            }
+        }
     }
 
     fun actualizarFC(nuevoValor: Int) {
-        _fc.value = nuevoValor
         val nuevaLectura = LecturaFC(
-            id = _historial.value.size + 1,
+            id = _state.value.lecturas.size + 1,
             valorBpm = nuevoValor,
-            hora = SimpleDateFormat("hh:mm a", Locale.getDefault())
-                .format(Date()),
+            hora = java.text.SimpleDateFormat("hh:mm a", java.util.Locale.getDefault())
+                .format(java.util.Date()),
             esNormal = nuevoValor in 60..100
         )
-        _historial.value = _historial.value + nuevaLectura
+        _state.update {
+            it.copy(
+                lecturas = it.lecturas + nuevaLectura,
+                fcActual = nuevoValor
+            )
+        }
     }
 }
