@@ -1,7 +1,7 @@
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.compose)
+    id("com.android.application")
+    id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.plugin.compose")
 }
 
 android {
@@ -14,7 +14,6 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
-
     }
 
     buildTypes {
@@ -26,47 +25,55 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     kotlinOptions {
         jvmTarget = "11"
     }
-    
+
+    buildFeatures {
+        compose = true
+    }
 }
 
 dependencies {
+    // Core
+    implementation("androidx.core:core-ktx:1.13.1")
+    implementation("androidx.appcompat:appcompat:1.7.0")
 
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.tv.foundation)
-    implementation(libs.androidx.tv.material)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.activity.compose)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
+    // Compose BOM
+    implementation(platform("androidx.compose:compose-bom:2024.10.01"))
 
-    // Leanback Library
-    implementation("androidx.leanback:leanback:1.2.0")
+    // Compose Core
+    implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.ui:ui-tooling-preview")
+    implementation("androidx.compose.foundation:foundation")
+    implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.runtime:runtime")
+    implementation("androidx.compose.runtime:runtime-livedata")
 
-    // Glide para imágenes
-    implementation("com.github.bumptech.glide:glide:4.16.0")
+    // Compose for TV
+    implementation("androidx.tv:tv-foundation:1.0.0-alpha10")
+    implementation("androidx.tv:tv-material:1.0.0-alpha10")
 
-    // ViewModel + Coroutines
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
+    // Navigation Compose
+    implementation("androidx.navigation:navigation-compose:2.8.5")
+
+    // ViewModel + Lifecycle
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
 
-    // Fragment (necesario para FragmentActivity y viewModels)
-    implementation("androidx.fragment:fragment-ktx:1.8.5")
+    // Activity Compose
+    implementation("androidx.activity:activity-compose:1.9.3")
 
-    // Activity (necesario para viewModels en Activity)
-    implementation("androidx.activity:activity-ktx:1.9.3")
+    // ExoPlayer para reproducción
+    implementation("com.google.android.exoplayer:exoplayer-core:2.19.1")
+    implementation("com.google.android.exoplayer:exoplayer-ui:2.19.1")
 
+    // Glide
+    implementation("com.github.bumptech.glide:glide:4.16.0")
 }
