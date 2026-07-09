@@ -38,9 +38,40 @@ Desarrollada como proyecto integrador en UTNG — 9° Cuatrimestre 2025.
 - [x] WearHistorialScreen — S10 (Rotary Input con corona del reloj)
 - [x] SmartHealthWatchFace — S10 (WatchFace personalizado con hora y FC)
 
-## Próximas unidades
 
-- [ ] Android TV — S10-S12
+## Pantallas implementadas (Unidad II - Wear OS)
+
+- [x] TvCatalogScreen — S11 (Compose for TV con D-pad)
+- [x] TvDetailScreen — S12 (Detalle con botones de acción)
+- [x] TvPlaybackScreen — S12 (ExoPlayer con AndroidView)
+- [ ] CastButton — S13 (Chromecast Remote Playback)
+
+
+## Arquitectura - SmartHealth Monitor
+
+Sensor PPG (Wear OS)
+│ Health Services API
+▼
+PassiveListenerService (wear)
+│ MessageClient (BLE)
+▼
+WearListenerService (app)
+│ SmartHealthRepository
+▼
+StateFlow<Int> (fcActual) ──────────────────────────────────┐
+│ │                                                         │
+▼ ▼                                                         │
+DashboardViewModel (app)  TvViewModel (tv)                   │
+│ collectAsState()     │ collectAsState()                    │
+▼ ▼                                                         │
+DashboardScreen (Compose)  TvCatalogScreen (Compose TV)      │
+└── CastButton ──► Chromecast (Remote Playback)              │
+                                                             │
+Room DB (LecturaFC) ◄── Repository ──► Flow<List<LecturaFC>> │
+│                                                             │
+┌─────────────────────┴──────────┐                          │
+▼                                 ▼                          │
+HistorialScreen (app)   TvCatalogScreen (tv)                 │
 
 ## Capturas de pantalla
 
