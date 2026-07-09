@@ -17,6 +17,7 @@ import mx.edu.utng.prgs.smarthealthmonitor2.data.SmartHealthRepository
 import mx.edu.utng.prgs.smarthealthmonitor2.ui.components.FilaHistorial
 import mx.edu.utng.prgs.smarthealthmonitor2.ui.components.TarjetaDato
 import mx.edu.utng.prgs.smarthealthmonitor2.ui.viewmodel.DashboardViewModel
+import mx.edu.utng.prgs.smarthealthmonitor2.ui.components.CastButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -59,6 +60,10 @@ fun DashboardScreen(
                         text = "SmartHealth",
                         style = MaterialTheme.typography.titleLarge
                     )
+                },
+                actions = {
+                    // ⭐ CastButton
+                    CastButton()
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
