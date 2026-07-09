@@ -1,6 +1,7 @@
 package mx.edu.utng.prgs.smarthealthmonitor2.ui.components
 
 import android.content.Context
+import android.graphics.Color
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -21,9 +22,13 @@ fun CastButton(
             MediaRouteButton(ctx).apply {
                 // Configurar el botón de Cast
                 CastButtonFactory.setUpMediaRouteButton(ctx, this)
+
                 // Asegurar que es clickeable
                 isEnabled = true
                 isFocusable = true
+
+                // ✅ Fondo transparente para que se vea bien
+                setBackgroundColor(Color.TRANSPARENT)
             }
         },
         modifier = modifier.size(48.dp)
