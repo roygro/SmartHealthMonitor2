@@ -49,29 +49,38 @@ Desarrollada como proyecto integrador en UTNG — 9° Cuatrimestre 2025.
 
 ## Arquitectura - SmartHealth Monitor
 
+```text
 Sensor PPG (Wear OS)
-│ Health Services API
+│
+├── Health Services API
+│
 ▼
-PassiveListenerService (wear)
-│ MessageClient (BLE)
+PassiveListenerService (Wear)
+│
+├── MessageClient (BLE)
+│
 ▼
-WearListenerService (app)
-│ SmartHealthRepository
-▼
-StateFlow<Int> (fcActual) ──────────────────────────────────┐
-│ │                                                         │
-▼ ▼                                                         │
-DashboardViewModel (app)  TvViewModel (tv)                   │
-│ collectAsState()     │ collectAsState()                    │
-▼ ▼                                                         │
-DashboardScreen (Compose)  TvCatalogScreen (Compose TV)      │
-└── CastButton ──► Chromecast (Remote Playback)              │
-                                                             │
-Room DB (LecturaFC) ◄── Repository ──► Flow<List<LecturaFC>> │
-│                                                             │
-┌─────────────────────┴──────────┐                          │
-▼                                 ▼                          │
-HistorialScreen (app)   TvCatalogScreen (tv)                 │
+WearListenerService (App)
+│
+├── SmartHealthRepository
+│
+├── StateFlow<Int> (fcActual)
+│   ├── DashboardViewModel (App)
+│   │   └── DashboardScreen (Compose)
+│   │       └── CastButton
+│   │           └── Chromecast (Remote Playback)
+│   │
+│   └── TvViewModel (TV)
+│       └── TvCatalogScreen (Compose TV)
+│
+└── Room Database (LecturaFC)
+    │
+    └── Repository
+        │
+        └── Flow<List<LecturaFC>>
+            ├── HistorialScreen (App)
+            └── TvCatalogScreen (TV)
+```
 
 ## Capturas de pantalla
 
