@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)  // ← AGREGAR
     id("com.google.devtools.ksp") version "2.0.21-1.0.28"
 }
 
@@ -76,4 +77,11 @@ dependencies {
     // Cast SDK
     implementation("androidx.mediarouter:mediarouter:1.7.0")
     implementation("com.google.android.gms:play-services-cast-framework:21.5.0")
+
+    // Eclipse Paho MQTT para Android
+    implementation("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5")
+    implementation("org.eclipse.paho:org.eclipse.paho.android.service:1.1.1")
+
+    // Kotlinx Serialization para JSON
+    implementation(libs.kotlinx.serialization.json)
 }
