@@ -24,6 +24,46 @@ Desarrollada como proyecto integrador en UTNG — 9° Cuatrimestre 2025.
 - Wearable Data Layer API (comunicación teléfono-reloj)
 - Health Services API (sensor FC real en segundo plano)
 
+## 📡 Comunicación MQTT entre dispositivos
+
+SmartHealth Monitor utiliza **MQTT** (Message Queuing Telemetry Transport) para la comunicación en tiempo real entre dispositivos.
+
+### Arquitectura MQTT
+
+```text
+⌚ Wear OS (Publicador)
+    │ Publica: utng/smarthealthmonitor/fc
+    ▼
+☁️ HiveMQ Cloud (Broker)
+    │
+    ├── 📱 Teléfono (Suscriptor + Publicador)
+    │       Recibe del reloj y re-publica al TV
+    │       Publica: utng/smarthealthmonitor/tv
+    │
+    └── 📺 Android TV (Suscriptor)
+          Recibe y actualiza la UI
+
+```
+## Topics Utilizados
+| Topic | Uso | Formato |
+|---|---|---|
+| `utng/smarthealthmonitor/fc` | Wear OS → Teléfono | `{"bpm": 85, "estado": "Normal", "timestamp": 1700000000}` |
+| `utng/smarthealthmonitor/tv` | Teléfono → TV | `{"bpm": 85, "estado": "Normal", "hora": "10:30:00"}` |
+| `utng/smarthealthmonitor/alerta` | Alerta de FC | `{"tipo": "FC_ALTA", "bpm": 135, "mensaje": "FC fuera de rango"}` |
+
+## Tecnologías
+- Eclipse Paho MQTT - Librería cliente MQTT para Android
+- Kotlinx Serialization - Serialización JSON
+- HiveMQ Cloud - Broker MQTT en la nube (Free Tier)
+
+## Estados de los dispositivos
+| Dispositivo | Rol | Estado |
+|---|---|---|
+| ⌚ Wear OS | Publicador | Publica FC cada vez que cambia |
+| 📱 Teléfono | Puente | Recibe del Wear y re-publica al TV |
+| 📺 Android TV | Suscriptor | Muestra FC en tiempo real |
+| ☁️ HiveMQ Cloud | Broker | Centraliza todos los mensajes |
+
 ## Pantallas implementadas (Unidad I)
 
 - [x] LoginScreen — S4
