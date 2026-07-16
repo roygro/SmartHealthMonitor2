@@ -1,51 +1,47 @@
-package mx.edu.utng.tv
+package mx.edu.utng.tv.presentation
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import mx.edu.utng.tv.mqtt.MqttTvSubscriber
+import mx.edu.utng.tv.mqtt.TvMessage
 import mx.edu.utng.tv.domain.model.TvUiState
 
-class TvViewModel : ViewModel() {
+class TvViewModel(
+    private val application: Application
+) : AndroidViewModel(application) {
 
     private val _state = MutableStateFlow(TvUiState())
     val state: StateFlow<TvUiState> = _state.asStateFlow()
 
+    // Flow de mensajes MQTT entrantes
+    private val mqttFlow = MutableStateFlow<TvMessage?>(null)
+
+    // MQTT Subscriber
+    private val mqttSubscriber = MqttTvSubscriber(application, mqttFlow)
+
     init {
-        cargarDatos()
-    }
+        // Conectar MQTT
+        mqttSubscriber.connect()
 
-    fun cargarDatos() {
+        // Observar mensajes MQTT y actualizar el estado de la UI
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true) }
-
-            // Usar MockData para simular
-            val lecturas = MockData.historialFC
-            val fcActual = lecturas.lastOrNull()?.valorBpm ?: 0
-
-            _state.update {
-                it.copy(
-                    lecturas = lecturas,
-                    fcActual = fcActual,
+            mqttFlow.collect { tvMsg ->
+                tvMsg ?: return@collect
+                _state.update { it.copy(
+                    fcActual = tvMsg.bpm,
+                    fcEstado = tvMsg.estado,
+                    ultimaHora = tvMsg.hora,
                     isLoading = false
-                )
+                )}
             }
         }
     }
 
-    fun actualizarFC(nuevoValor: Int) {
-        val nuevaLectura = LecturaFC(
-            id = _state.value.lecturas.size + 1,
-            valorBpm = nuevoValor,
-            hora = java.text.SimpleDateFormat("hh:mm a", java.util.Locale.getDefault())
-                .format(java.util.Date()),
-            esNormal = nuevoValor in 60..100
-        )
-        _state.update {
-            it.copy(
-                lecturas = it.lecturas + nuevaLectura,
-                fcActual = nuevoValor
-            )
-        }
+    override fun onCleared() {
+        super.onCleared()
+        mqttSubscriber.disconnect()
     }
 }

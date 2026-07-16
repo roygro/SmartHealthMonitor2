@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)  // ← AGREGAR
 }
 
 android {
@@ -77,4 +78,9 @@ dependencies {
     implementation("androidx.wear.watchface:watchface-complications-rendering:1.2.1")
     implementation("androidx.wear.watchface:watchface-style:1.2.1")
     implementation("androidx.wear.watchface:watchface-client:1.2.1")
+
+
+    implementation("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5")
+    implementation("org.eclipse.paho:org.eclipse.paho.android.service:1.1.1")
+    implementation(libs.kotlinx.serialization.json)
 }

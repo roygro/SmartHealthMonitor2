@@ -1,12 +1,16 @@
 package mx.edu.utng.prgs.smarthealthmonitor2.wear.presentation
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import mx.edu.utng.prgs.smarthealthmonitor2.wear.mqtt.MqttWearPublisher  // ← IMPORT CORRECTO
 
-class WearDashboardViewModel : ViewModel() {
+class WearDashboardViewModel(
+    private val application: Application
+) : AndroidViewModel(application) {
 
     private val _fc = MutableStateFlow(72)
     val fc: StateFlow<Int> = _fc.asStateFlow()
@@ -15,7 +19,13 @@ class WearDashboardViewModel : ViewModel() {
     private val _historial = MutableStateFlow<List<LecturaFC>>(emptyList())
     val historial: StateFlow<List<LecturaFC>> = _historial.asStateFlow()
 
+    // MQTT Publisher
+    private val mqttPublisher = MqttWearPublisher(application, viewModelScope)
+
     init {
+        // Conectar MQTT
+        mqttPublisher.connect()
+
         // Simular cambios de FC cada 2 segundos
         viewModelScope.launch {
             var currentFc = 72
@@ -24,18 +34,27 @@ class WearDashboardViewModel : ViewModel() {
                 currentFc = if (currentFc == 72) 110 else 72
                 _fc.value = currentFc
 
+                // Publicar FC vía MQTT
+                val estado = when {
+                    currentFc < 60 -> "FC Baja"
+                    currentFc > 100 -> "FC Alta"
+                    else -> "Normal"
+                }
+                mqttPublisher.publishFC(currentFc, estado)
+
                 // Solo agregar al historial cuando sea anormal (110)
                 if (currentFc == 110) {
                     val nuevaLectura = LecturaFC(
                         valorBpm = currentFc
-                        // id = auto-generado por Room
-                        // timestamp = automático
-                        // hora = automático
-                        // esNormal = calculado automáticamente
                     )
                     _historial.value = listOf(nuevaLectura) + _historial.value
                 }
             }
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        mqttPublisher.disconnect()
     }
 }

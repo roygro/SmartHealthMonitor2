@@ -17,7 +17,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.tv.foundation.lazy.list.TvLazyColumn
 import androidx.tv.foundation.lazy.list.TvLazyRow
 import androidx.tv.foundation.lazy.list.items
-import mx.edu.utng.tv.TvViewModel
+import mx.edu.utng.tv.presentation.TvViewModel  // ← IMPORT CORREGIDO
 
 @Composable
 fun TvCatalogScreen(
