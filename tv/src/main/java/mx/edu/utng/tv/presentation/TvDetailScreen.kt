@@ -23,7 +23,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.tv.material3.ClickableSurfaceDefaults
 import androidx.tv.material3.Surface
-import mx.edu.utng.tv.TvViewModel
+import mx.edu.utng.tv.presentation.TvViewModel
 import androidx.tv.material3.ExperimentalTvMaterial3Api  // ← AGREGAR
 
 @OptIn(ExperimentalTvMaterial3Api::class)  // ← AGREGAR
