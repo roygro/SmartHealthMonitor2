@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.Log
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import mx.edu.utng.prgs.smarthealthmonitor2.data.SmartHealthRepository  // ← AGREGAR
+import mx.edu.utng.prgs.smarthealthmonitor2.data.SmartHealthRepository
 import org.eclipse.paho.client.mqttv3.*
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence
 import java.text.SimpleDateFormat
@@ -35,7 +35,6 @@ class MqttAppService(
                 socketFactory = SSLSocketFactory.getDefault()
             }
 
-            // Callback de mensajes entrantes
             client?.setCallback(object : MqttCallback {
                 override fun messageArrived(topic: String, msg: MqttMessage) {
                     when (topic) {
@@ -47,9 +46,7 @@ class MqttAppService(
                     Log.w(TAG, "⚠️ Conexión perdida: ${cause?.message}")
                 }
 
-                override fun deliveryComplete(token: IMqttDeliveryToken?) {
-                    // No usado
-                }
+                override fun deliveryComplete(token: IMqttDeliveryToken?) {}
             })
 
             client?.connect(options, null, object : IMqttActionListener {

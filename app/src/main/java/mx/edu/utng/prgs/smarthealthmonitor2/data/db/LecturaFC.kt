@@ -1,5 +1,6 @@
 package mx.edu.utng.prgs.smarthealthmonitor2.data.db
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.text.SimpleDateFormat
@@ -13,5 +14,7 @@ data class LecturaFC(
     val valorBpm: Int,
     val timestamp: Long = System.currentTimeMillis(),
     val hora: String = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date()),
-    val esNormal: Boolean = valorBpm in 60..100
+    val esNormal: Boolean = valorBpm in 60..100,
+    @ColumnInfo(name = "sincronizado")
+    val sincronizado: Boolean = false // ← NUEVO: false = pendiente de sync
 )

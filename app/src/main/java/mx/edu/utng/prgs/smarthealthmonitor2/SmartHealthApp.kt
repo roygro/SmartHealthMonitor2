@@ -5,6 +5,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import mx.edu.utng.prgs.smarthealthmonitor2.data.SmartHealthRepository
+import mx.edu.utng.prgs.smarthealthmonitor2.data.sync.NeonSyncWorker
 import mx.edu.utng.prgs.smarthealthmonitor2.mqtt.MqttAppService
 
 class SmartHealthApp : Application() {
@@ -13,16 +14,17 @@ class SmartHealthApp : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        // Inicializar Repository
         SmartHealthRepository.init(this)
 
-        // Limpiar historial antiguo
         CoroutineScope(Dispatchers.IO).launch {
             SmartHealthRepository.limpiarHistorialAntiguo()
         }
 
-        // ⭐ Inicializar MQTT (ya no necesita pasar fcFlow)
+        // ⭐ Inicializar MQTT (ahora sin parámetros)
         mqttService = MqttAppService(context = this)
         mqttService.connect()
+
+        // Programar sync periódico con Neon
+        NeonSyncWorker.schedule(this)
     }
 }
