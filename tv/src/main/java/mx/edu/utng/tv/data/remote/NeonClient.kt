@@ -1,5 +1,6 @@
 package mx.edu.utng.tv.data.remote
 
+import mx.edu.utng.tv.BuildConfig
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -9,14 +10,12 @@ import java.util.concurrent.TimeUnit
 import javax.net.ssl.*
 
 object NeonClient {
-    // ⭐ Usar el HOST correcto (sin -pooler)
-    private const val NEON_HOST = "ep-crimson-brook-awb1em3b.c-12.us-east-1.aws.neon.tech"
-    private const val NEON_API_KEY = "napi_w0e2bhzobvud6pm85vow5qj7wj5h5ujfs7v3ylahdo89v7ajq69f8n0pjw74xpsu"
-    private const val NEON_DB = "neondb"
-    private const val NEON_USER = "neondb_owner"
-    private const val NEON_PASSWORD = "npg_83YqQPSCNkMK"
+    private val NEON_HOST: String by lazy { BuildConfig.NEON_HOST }
+    private val NEON_API_KEY: String by lazy { BuildConfig.NEON_API_KEY }
+    private val NEON_DB: String by lazy { BuildConfig.NEON_DB }
+    private val NEON_USER: String by lazy { BuildConfig.NEON_USER }
+    private val NEON_PASSWORD: String by lazy { BuildConfig.NEON_PASSWORD }
 
-    // ⭐ Usar la URL directa del host
     private val BASE_URL: String by lazy {
         "https://${NEON_HOST}/"
     }

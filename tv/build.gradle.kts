@@ -1,3 +1,11 @@
+import java.util.Properties
+
+// ⭐ Leer local.properties
+val localProps = Properties()
+val localPropertiesFile = file("../local.properties")
+if (localPropertiesFile.exists()) {
+    localProps.load(localPropertiesFile.inputStream())
+}
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -15,6 +23,14 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
+
+        // ⭐ BuildConfig para Neon
+        buildConfigField("String", "NEON_HOST", "\"${localProps.getProperty("NEON_HOST", "")}\"")
+        buildConfigField("String", "NEON_API_KEY", "\"${localProps.getProperty("NEON_API_KEY", "")}\"")
+        buildConfigField("String", "NEON_DB", "\"${localProps.getProperty("NEON_DB", "")}\"")
+        buildConfigField("String", "NEON_USER", "\"${localProps.getProperty("NEON_USER", "")}\"")
+        buildConfigField("String", "NEON_PASSWORD", "\"${localProps.getProperty("NEON_PASSWORD", "")}\"")
+
     }
 
     buildTypes {
@@ -38,6 +54,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true  // ⭐ AGREGAR ESTO
     }
 }
 
