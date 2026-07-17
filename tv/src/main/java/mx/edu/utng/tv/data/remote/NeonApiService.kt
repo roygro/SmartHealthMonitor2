@@ -25,6 +25,7 @@ data class LecturaFcDto(
 )
 
 interface NeonApiService {
+    // ⭐ Cambiar a "sql" (sin /api/v2/)
     @POST("sql")
     suspend fun executeQuery(
         @Header("Authorization") auth: String,
