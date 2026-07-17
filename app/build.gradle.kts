@@ -1,3 +1,12 @@
+import java.util.Properties
+
+// Leer local.properties
+val localProps = Properties()
+val localPropertiesFile = file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProps.load(localPropertiesFile.inputStream())
+}
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -18,6 +27,18 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // Leer credenciales de Neon desde local.properties
+        buildConfigField("String", "NEON_API_KEY",
+            "\"${localProps.getProperty("NEON_API_KEY", "")}\"")
+        buildConfigField("String", "NEON_HOST",
+            "\"${localProps.getProperty("NEON_HOST", "")}\"")
+        buildConfigField("String", "NEON_DB",
+            "\"${localProps.getProperty("NEON_DB", "")}\"")
+        buildConfigField("String", "NEON_USER",
+            "\"${localProps.getProperty("NEON_USER", "")}\"")
+        buildConfigField("String", "NEON_PASSWORD",
+            "\"${localProps.getProperty("NEON_PASSWORD", "")}\"")
     }
 
     buildTypes {
@@ -84,4 +105,14 @@ dependencies {
 
     // Kotlinx Serialization para JSON
     implementation(libs.kotlinx.serialization.json)
+
+    // Retrofit + OkHttp para llamadas a Neon HTTP API
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+
+    // WorkManager para sync periódico en background
+    implementation("androidx.work:work-runtime-ktx:2.9.1")
+
 }
